@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All my links | Mark La Raza</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @font-face {
+            font-family: 'Voice In My Head';
+            src: url('font/Voice\ In\ My\ Head.otf') format('truetype');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+        @font-face {
+            font-family: 'Oswald-Light';
+            src: url('font/Oswald-Light.ttf') format('truetype');
+            font-weight: 300;
+            font-style: normal;
+            font-display: swap;
+        }
+        :root {
+            --primary: #ffffff;
+            --secondary: #00fff2;
+            --accent: #aeff00;
+            --accent-hover: #8800ff;
+            --text: #000000;
+            --text-light: #ffffff91;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --font-logo: Voice In My Head;
+            --font-main: 'Oswald-Light';
+
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-main);
+        }
+        
+        body {
+            background: #141414;
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            color: var(--text-light);
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            background: transparent;
+            padding: 40px 20px;
+            border-radius: 20px;
+            
+        }
+
+        .profile {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('AV/LIVEBOLLOCK.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            z-index: -1;
+            animation: fadeIn 0.8s ease-out;
+            margin-bottom: 0;
+            border-radius: 0;
+            filter: blur(3px);
+            padding: 0;
+        }
+
+        .profile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.244);
+            border-radius: 0;
+        }
+
+        .profile-img-container {
+            display: none;
+        }
+
+        .profile h1,
+        .profile p {
+            display: none;
+        }
+        
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 80px;
+            margin-top: 40px;
+        }
+        
+        .icon-link {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(20px);
+            border-radius: 100px;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            animation: slideUp 0.5s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .icon-link:nth-child(1) { animation-delay: 0.1s; }
+        .icon-link:nth-child(2) { animation-delay: 0.2s; }
+        .icon-link:nth-child(3) { animation-delay: 0.3s; }
+        .icon-link:nth-child(4) { animation-delay: 0.4s; }
+        .icon-link:nth-child(5) { animation-delay: 0.5s; }
+        .icon-link:nth-child(6) { animation-delay: 0.6s; }
+        
+        .icon-link:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+            background-color: var(--secondary);
+        }
+        
+        .icon-link i {
+            font-size: 28px;
+            color: var(--accent);
+            transition: var(--transition);
+        }
+        
+        .icon-link:hover i {
+            color: var(--accent-hover);
+        }
+                
+        /* Preview Modal */
+        .preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(20, 20, 20, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .preview-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .preview-content {
+            position: relative;
+            background-color: transparent;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            transition: var(--transition);
+        }
+
+        .preview-modal.active .preview-content {
+            transform: scale(1);
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+            background: transparent;
+            filter: blur(3px);
+        }
+
+        .preview-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+            padding: 30px 20px 20px;
+            text-align: center;
+        }
+
+        .preview-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .preview-description {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .listen-btn {
+            display: inline-block;
+            color: var(--text);
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+        
+        .footer p {
+            color: var(--text-light);
+        }
+
+
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .profile-img-container {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .profile h1 {
+                font-size: 24px;
+            }
+            
+            .profile p {
+                font-size: 15px;
+            }
+            
+            .links-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            
+            .icon-link {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .icon-link i {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="profile"></div>
+    <div class="container">
+        <h1 id="profileName">Mark La Raza</h1>
+        <p id="profileDescription">Music producer • Audio technician</p>
+        
+        <div class="links-grid">
+        </div>
+        
+        
+        <div class="footer">
+            <p>© <span id="currentYear"></span> - All rights reserved</p>
+        </div>
+    </div>
+
+    <!-- Modal Preview -->
+    <div class="preview-modal" id="previewModal">
+        <div class="close-btn" id="closeModal">
+            <i class="fas fa-times"></i>
+        </div>
+        <div class="preview-content">
+            <img src="" alt="Preview" class="preview-image" id="previewImage">
+            <div class="preview-info">
+                <h3 class="preview-title" id="previewTitle"></h3>
+                <p class="preview-description" id="previewDescription"></p>
+                <a href="#" class="listen-btn" id="listenLink">Open</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dati personalizzabili
+        const profileData = {
+            name: "Mark La Raza",
+            description: "Music producer • Audio technician",
+        };
+        
+        // Lista dei tuoi link con preview
+        const links = [
+            {
+                title: "YouTube",
+                url: "https://www.youtube.com/playlist?list=OLAK5uy_mPIxVG_mJSkdlsvyTUb6tRwYEMeAHA0t8",
+                icon: "fab fa-youtube",
+                previewImage: "https://i.ytimg.com/vi/lJgyDfLzDsE/hqdefault.jpg",
+                previewTitle: "Snello EP on YouTube",
+                previewDescription: "Listen my EP 'Snello' on YouTube Music",
+                buttonText: "Listen"
+            },
+            {
+                title: "Tidal",
+                url: "https://tidal.com/album/318800770/u",
+                icon: "fas fa-wave-square",
+                previewImage: "./AV/Back_1.png",
+                previewTitle: "Snello EP on Tidal",
+                previewDescription: "Listen to my EP 'Snello' on Tidal",
+                buttonText: "Listen"
+            },
+            {
+                title: "Apple Music",
+                url: "https://music.apple.com/it/album/snello-ep/1709410693",
+                icon: "fab fa-apple",
+                previewImage: "https://is1-ssl.mzstatic.com/image/thumb/Music116/v4/0a/91/a0/0a91a0a3-6581-853a-e63f-5855aa5c10f5/198009212484.png/632x632bf.webp",
+                previewTitle: "Snello EP on Apple Music",
+                previewDescription: "Listen to my EP 'Snello' on Apple Music",
+                buttonText: "Listen"
+            },
+            {
+                title: "Deezer",
+                url: "https://link.deezer.com/s/31wZNqwd2rbAPoCccYphX",
+                icon: "fab fa-deezer",
+                previewImage: "https://cdn-images.dzcdn.net/images/cover/b8ac7d06369128c6bb545114ffda9e89/500x500-000000-80-0-0.jpg",
+                previewTitle: "Snello EP on Deezer",
+                previewDescription: "Listen to my EP 'Snello' on Deezer",
+                buttonText: "Listen"
+            },
+            {
+                title: "Instagram",
+                url: "https://www.instagram.com/mark_la_raza/",
+                icon: "fab fa-instagram",
+                previewImage: "./AV/Back_1.png", 
+                previewTitle: "Follow me on Instagram",
+                previewDescription: "Follow my Instagram profile",
+                buttonText: "Follow"
+            },
+            {
+                title: "Email",
+                url: "mailto:razagate23@gmail.com",
+                icon: "far fa-envelope",
+                previewImage: "./AV/Back_1.png",
+                previewTitle: "Get in touch",
+                previewDescription: "Contact me via email",
+                buttonText: "Contact"
+            }
+        ];
+
+        // Aggiorna i dati del profilo
+        document.getElementById('profileName').textContent = profileData.name;
+        document.getElementById('profileDescription').textContent = profileData.description;
+        
+        // Crea le icone dei link
+        const linksContainer = document.querySelector('.links-grid');
+        
+        links.forEach(link => {
+            const iconLink = document.createElement('div');
+            iconLink.className = 'icon-link';
+            iconLink.setAttribute('data-link', JSON.stringify(link));
+            
+            const iconElement = document.createElement('i');
+            iconElement.className = link.icon;
+            
+            iconLink.appendChild(iconElement);
+            linksContainer.appendChild(iconLink);
+            
+            // Aggiungi evento click per aprire il preview
+            iconLink.addEventListener('click', function() {
+                const linkData = JSON.parse(this.getAttribute('data-link'));
+                openPreview(linkData);
+            });
+        });
+        
+        // Funzioni per il modal
+        const previewModal = document.getElementById('previewModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const previewImage = document.getElementById('previewImage');
+        const previewTitle = document.getElementById('previewTitle');
+        const previewDescription = document.getElementById('previewDescription');
+        const listenLink = document.getElementById('listenLink');
+        
+        function openPreview(linkData) {
+            previewImage.src = linkData.previewImage;
+            previewTitle.textContent = linkData.previewTitle;
+            previewDescription.textContent = linkData.previewDescription;
+            listenLink.href = linkData.url;
+            listenLink.textContent = linkData.buttonText;
+            
+            previewModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closePreview() {
+            previewModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        
+        closeModalBtn.addEventListener('click', closePreview);
+        
+        // Chiudi il modal cliccando fuori dal contenuto
+        previewModal.addEventListener('click', function(e) {
+            if (e.target === previewModal) {
+                closePreview();
+            }
+        });
+        
+        // Chiudi il modal con il tasto ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePreview();
+            }
+        });
+
+        // Aggiorna anno dinamico
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
